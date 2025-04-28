@@ -7,7 +7,6 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }:
-
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs { inherit system; };
 
@@ -39,36 +38,70 @@
         '';
       };
 
-    tex = pkgs.texlive.combine {
-      inherit (pkgs.texlive) scheme-basic;
-      packages = with pkgs.texlive; {
-        dvisvgm = dvisvgm;
-        dvipng = dvipng;
-        wrapfig = wrapfig;
-        amsmath = amsmath;
-        ulem = ulem;
-        hyperref = hyperref;
-        capt-of = capt-of;
-        latexmk = latexmk;
-        beamer = beamer;
-        luaotfload = luaotfload;
-      };
+      tex = pkgs.texlive.combine {
+      inherit (pkgs.texlive)
+        scheme-small
+        tcolorbox
+        beamer
+        biber
+        biblatex
+        csquotes
+        pgf
+        tikzfill
+        tikzpingus
+        fontspec
+        firamath-otf
+        firamath
+        fira
+        lualatex-math
+        contour
+        xcolor
+        background
+        emoji
+        fontawesome5
+        listings
+        lstfiracode
+        xstring
+        listingsutf8
+        lstaddons
+        accsupp
+        fancyqr
+        pict2e
+        qrcode
+        hyperxmp
+        ifmtarg
+        luacode
+        latexmk
+        hyperref
+        pdfpc;
     };
+
     in
-    rec {
+    {
+        fonts.packages = with pkgs; [
+                (nerdfonts.override { fonts = [ "FiraCode" "FiraCode-Regular" "FiraCode-Bold" ]; })
+        ];
         devShell = pkgs.mkShell {
           buildInputs = [
             tex
             smile
             awesome-beamer
+
          ];
-        };
-        shellHook = ''
+
+         shellHook = ''
             echo "Welcome to nixtex!"
             mkdir -p ./out
+            mkdir -p ./res
             touch main.tex
-            alias compile='latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode -output-directory=./out" main.tex'
-            alias clear='latexmk -CA && rm -rf ./out/* && rm -rf ./pkgs/'
+            touch refs.bib
+            export TEXINPUTS="${smile}/tex/latex/smile:${awesome-beamer}/tex/latex/awesome-beamer:"
+            export TTFONTS="./fonts/FiraCode-Regular.ttf:./fonts/FiraCode-Bold.ttf:"
+            alias compile='latexmk -pdf -pdflatex="lualatex -interaction=nonstopmode -output-directory=./out" main.tex'
+            alias cleanup='latexmk -CA && rm -rf ./out/* && rm -rf ./pkgs/'
+            wget https://www.static.tu.berlin/fileadmin/www/_processed_/b/9/csm_TUBerlin-ImagebilderOktober2019-PhilippArnoldtPhotography-115_bec3e1c6c1.jpg -nc -O ./res/uni.jpg
           '';
+
+        };
       });
 }
