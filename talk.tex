@@ -1,0 +1,147 @@
+\documentclass[aspectratio=169,handout]{beamer}
+
+\makeatletter
+\usepackage{beamerthemeawesome}
+\usepackage{smile}
+
+\definecolor{dgreen}{HTML}{081c15}
+\usetheme[english,color,coloraccent=dgreen,notoc,hyperref,listings]{awesome}
+
+\hypersetup{
+    pdfsubject={Your Subject Here},
+    pdftitle={Your Title Here},
+    pdfauthor={Your Author Here}
+}
+\usepackage[
+	backend=biber,
+	style=alphabetic
+]{biblatex}
+\usepackage[strict,autostyle]{csquotes}
+\nocite{*}
+\addbibresource{refs.bib}
+
+\usetikzlibrary{tikzmark,decorations.text}
+\def\m#1{\tikzmark{#1}}
+\newcommand<>\ul[5][0pt]{\begin{tikzpicture}[o,blend mode=multiply]
+	\coordinate(#5_west) at ([yshift=#1-0.25ex]pic cs:#3);
+	\coordinate(#5_east) at ([yshift=#1+0.35ex]pic cs:#4);
+	\fill[ul=#2,visible on=#6] (#5_west) rectangle node(#5){} (#5_east);
+\end{tikzpicture}}
+\tikzset{ul/.style={#1!70!black,opacity=0.40,rounded corners=.17ex}}
+\def\um#1#2#3{\begin{tikzpicture}[o]
+	\coordinate(#3_west) at ([yshift=0ex]pic cs:#1);
+	\coordinate(#3_east) at ([yshift=0ex]pic cs:#2);
+	\coordinate(#3) at ($(#3_west)!0.5!(#3_east)$);
+\end{tikzpicture}}
+
+\usepackage{emoji}
+\usepackage{fontawesome5}
+\usepackage{tikzpingus}
+\usepackage{fancyqr}
+
+\def\checkbox{\raisebox{-2pt}{\begin{tikzpicture}[]
+	\node (B) {\color{accent}\scalebox{.65}{\faCheck}};
+	\node[roundednode,node on layer=background,fill=lightgray!30,rnd,minimum width=1.7ex,minimum height=1.7ex] at (B) {};
+\end{tikzpicture}}}
+
+\usepackage[sfdefault]{FiraSans}
+\usepackage{firamath-otf}
+\usepackage{fontspec}
+\setmonofont[
+	Path = ./fonts/,
+	Scale = .9,
+	Extension = .ttf,
+	Contextuals=Alternate,
+	BoldFont={*-Bold},
+	UprightFont={*-Regular},
+]{FiraCode}
+
+\usepackage[duration=25,defaulttransition=fade]{pdfpc}
+\newcommand<>{\talknote}[1]{\only#2{\pdfpcnote{- #1}\relax}}
+
+\background{res/uni.jpg}
+\title{Constrained Zig}
+\subtitle{Exploring properties of constraint programs}
+\author{Lukas Pietzschmann}
+\email{lukas.pietzschmann@uni-ulm.de}
+\institute{Zigtoberfest}
+\uni{Hochschule München}
+\location{Munich}
+\date{October 19$^\text{th}$, 2024}
+
+\makeatletter
+\newsavebox\avatar
+\savebox\avatar{\begin{tikzpicture}
+	\node[roundnode,fill=accent,inner sep=0,outer sep=0,minimum width=1.75cm+\smile@linewidth] at (0,0) {};
+	\clip (0,0) circle (\dimexpr1.75cm/2\relax);
+%	\node at (0,0) {\includegraphics[width=1.75cm]{res/me.png}};
+\end{tikzpicture}}
+
+\def\link #1 to #2;{\def\ULdepth{.5pt}\def\ULthickness{.1pt}\uline{\href{#2}{#1}}}
+\def\ergo{\raisebox{-1pt}{\faAngleRight}}
+\newcommand<>\tc[2]{\textcolor#3{#1}{#2}}
+\newcommand<>\cg[1]{\tc#2{gray}{#1}}
+\newcommand<>\cb[1]{\tc#2{black}{#1}}
+
+\def\amcard#1#2#3{\begin{tikzpicture}
+	\node (T) {\faCaretRight~#2};
+	\node[below=1mm of T.south west,anchor=north west,text width=\textwidth/2-8.5mm,align=justify] (D) {\small#3};
+	\node[roundednode,fit=(T)(D),node on layer=background,fill=lightgray!20] (F) {};
+	\node[node on layer=background,anchor=north east,scale=2,opacity=0.1] at (F.north east) {#1};
+\end{tikzpicture}}
+
+\tikzset{bb/.style={draw=tcbcolframe,dash pattern=on 1mm off 1mm,dash phase=0.5mm,tcb@spec,segmentation@style}}
+\def\setlinetext#1{\small\color{tcbcolframe}\contourlength{1.5pt}\contour{tcbcolback}{#1}}
+\newenvironment{versusbox}[1][]{
+	\begin{beamerbox}[sidebyside,segmentation code={
+		\path[bb] (segmentation.north) to node[rotate=90]{\setlinetext{#1}} (segmentation.south);
+	}]{gray}{}%
+}{\end{beamerbox}}
+
+\usepackage[verbatim]{lstfiracode}
+\lstdefinestyle{firastyleb}{style=FiraCodeStyle,style=smile@lst@base}
+\lstdefinestyle{firastylep}{style=FiraCodeStyle,style=smile@lst@plain}
+\lstset{tabsize=4,style=firastylep}
+\lstdefinelanguage{chr}{
+	keywords={/, <=>, true}
+}
+\lstnewenvironment{chr}{\lstset{language=chr}}{}
+\newcommand\chri[2][]{\lstinline[language=chr,#1]{#2}}
+
+\def\signed#1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+	\hbox{}\nobreak\hfil(#1)%
+	\parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\quotebox
+\newenvironment{aquote}[1]
+	{\savebox\quotebox{#1}\begin{quote}}
+	{\signed{\usebox\quotebox}\end{quote}}
+\usepackage{hyperref}
+
+
+\begin{document}
+
+
+\begin{frame}
+	\frametitle{About Me}
+
+\end{frame}
+
+
+
+
+\maketitle
+
+\section{About Me}
+\begin{frame}
+	\frametitle{About Me}
+\end{frame}
+
+\section{References}
+\defbibheading{bibliography}[\bibname]{}
+
+\begin{frame}[allowframebreaks]
+	\frametitle{References}
+%	\printbibliography
+\end{frame}
+\end{document}
